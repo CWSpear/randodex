@@ -1,7 +1,7 @@
 <template>
   <div class="pokemon-card-wrapper">
     <div @click="openModal()" class="pokemon-card" :id="pokemon.name" :class="{ highlight }">
-      <PokemonSprite :pokemon="pokemon" :withName="true" />
+      <PokemonSprite class="pokemon-card-sprite" :pokemon="pokemon" :withName="true" />
     </div>
   </div>
 </template>
@@ -41,5 +41,9 @@ function openModal() {
   &.highlight {
     background: paleturquoise;
   }
+}
+
+.pokemon-card-sprite {
+  padding: 1rem 0 0;
 }
 </style>

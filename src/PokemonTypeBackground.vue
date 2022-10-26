@@ -10,10 +10,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Pokemon } from '@/tools/pokemon';
+import type { BasicInfo } from '@/tools/pokemon';
 
 const props = defineProps<{
-  pokemon: Pokemon;
+  pokemon: BasicInfo;
 }>();
 </script>
 

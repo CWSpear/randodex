@@ -30,11 +30,14 @@ export interface Machines {
   isHM: boolean;
 }
 
-export interface BaseStats {
+export interface BasicInfo {
   number: number;
   name: string;
   type1: Type;
   type2?: Type;
+}
+
+export interface BaseStats extends BasicInfo {
   hp: number;
   attack: number;
   defense: number;
@@ -46,7 +49,7 @@ export interface BaseStats {
 }
 
 export interface Pokemon extends BaseStats {
-  evolutions: string[]; // name of Pokemon, as they are unique
+  evolutions: BasicInfo[]; // name of Pokemon, as they are unique
   moves: Move[];
   machines: Machines[];
 }

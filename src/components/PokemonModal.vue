@@ -4,7 +4,7 @@
 
     <div class="scroll-area" @click="closeModal($event)">
       <div class="pokemon-details">
-        <PokemonSprite :withName="true" :pokemon="pokemon" />
+        <PokemonSprite :size="3" :withName="true" :pokemon="pokemon" />
 
         <div class="stats">
           <table class="stats-table table">
@@ -37,19 +37,23 @@
           <StatsChart :meta="meta" :pokemon="pokemon" />
         </div>
 
-        <div class="evolutions" v-if="evolutions.length">
-          <PokemonSprite class="evo-sprite" :size="2" :pokemon="pokemon" :withName="false" />
+        <div class="evolutions" v-if="pokemon.evolutions.length">
+          <PokemonTypeBackground :pokemon="pokemon" class="evo-sprite">
+            <PokemonSprite :size="1" :pokemon="pokemon" :withName="false" />
+          </PokemonTypeBackground>
 
           <img class="arrow" width="64" src="/right-arrow.svg" alt="evolves into" />
 
           <div class="possible-evos">
             <a
-              v-for="evolution in evolutions"
+              class="evo-sprite linkable-evo-sprite"
+              v-for="evolution in pokemon.evolutions"
               :key="evolution.name"
               :href="`#${evolution.name}`"
-              class="evo-sprite linkable-evo-sprite"
             >
-              <PokemonSprite :size="2" :pokemon="evolution" :withName="false" />
+              <PokemonTypeBackground :pokemon="evolution">
+                <PokemonSprite :size="1" :pokemon="evolution" :withName="false" />
+              </PokemonTypeBackground>
             </a>
           </div>
         </div>
@@ -81,7 +85,7 @@
 import PokemonSprite from '@/components/PokemonSprite.vue';
 import StatsChart from '@/components/StatsChart.vue';
 import PokemonTypeBackground from '@/PokemonTypeBackground.vue';
-import type { Meta, Pokemon } from '@/tools/pokemon';
+import type { BasicInfo, Meta, Pokemon } from '@/tools/pokemon';
 import { closePokemonModal } from '@/tools/select';
 import { computed, ref } from 'vue';
 
@@ -93,10 +97,6 @@ const props = defineProps<{
 const showMoves = ref(true);
 
 const showMachines = ref(true);
-
-const evolutions = computed<Pokemon[]>(() =>
-  props.pokemon.evolutions.map((evo: string) => <Pokemon>{ name: evo }),
-);
 
 function closeModal(event?: MouseEvent) {
   if (event) {
@@ -152,15 +152,16 @@ $gridLineColor: #ccc;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 
   .arrow {
-    margin: 0 1rem;
+    margin: 0 1rem 1rem;
   }
 
   .evo-sprite {
-    background: #eee;
     border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1rem;
 
     &.linkable-evo-sprite {
       display: block;
@@ -203,7 +204,7 @@ $gridLineColor: #ccc;
   background: white;
   max-width: 600px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem 2rem 2rem;
 
   text-align: center;
 }

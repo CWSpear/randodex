@@ -1,10 +1,10 @@
 <template>
   <div class="sprite-and-name">
-    <div class="sprite">
+    <div class="sprite" :class="{ 'with-name': withName }">
       <img
         class="sprite-image"
-        :width="64 * (size || 4)"
-        :height="64 * (size || 4)"
+        :width="96 * (size || 2)"
+        :height="96 * (size || 2)"
         :alt="`${pokemon.name} Sprite`"
         :src="src"
       />
@@ -15,28 +15,30 @@
 
 <script lang="ts" setup>
 import PokemonName from '@/components/PokemonName.vue';
-import type { Pokemon } from '@/tools/pokemon';
+import type { BasicInfo } from '@/tools/pokemon';
 import { computed } from 'vue';
 
 const props = defineProps<{
-  pokemon: Pokemon;
+  pokemon: BasicInfo;
   withName: boolean;
   size?: number;
 }>();
 
 const src = computed(() => {
-  const spriteNameRaw = props.pokemon.name.toLowerCase().replace(/ /g, '_');
+  return `/sprites/${props.pokemon.number}.png`;
+
+  const spriteNameRaw = props.pokemon.name.toLowerCase().replace(/ /g, '-');
 
   // some special cases...
   let spriteName: string;
   switch (spriteNameRaw) {
     case 'nidoran♀':
-      spriteName = 'nidoran_f';
+      spriteName = 'nidoran-f';
       break;
     case 'nidoran♂':
-      spriteName = 'nidoran_m';
+      spriteName = 'nidoran-m';
       break;
-    case 'porygon_2':
+    case 'porygon-2':
       spriteName = 'porygon2';
       break;
     default:
@@ -53,12 +55,15 @@ const src = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
 
   .sprite-image {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+  }
+
+  &.with-name {
+    padding-bottom: 1rem;
   }
 }
 </style>

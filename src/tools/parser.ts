@@ -1,5 +1,5 @@
 import type { Dictionary } from 'lodash';
-import { compact, fromPairs } from 'lodash';
+import { compact, fromPairs, keyBy } from 'lodash';
 import type { BaseStats, Machines, Move, Pokemon, Type } from './pokemon';
 import { fixCase } from './util';
 
@@ -9,23 +9,47 @@ const POKEMON_EVOLUTION_START = '--Randomized Evolutions--';
 const POKEMON_EVOLUTION_REGEX = /(.*) -> (.*)/;
 const POKEMON_MOVES_START_REGEX = /\d{3} (.+) ->  ?(.+)/;
 const MOVE_LINE_REGEX = /Level (\d{1,3}) ? ?: (.*)/;
+const GAME_NAME_REGEX = /Randomization of (.*?) (?:\(|v|\d)/;
 
 const NO_MOVES_LINE = 'Pokemon Movesets: Unchanged';
 const NO_MACHINES_LINE = 'TM Moves: Unchanged';
 const NO_STATS_LINE = 'Pokemon base stats & type: unchanged';
+
+export function parseGameVersion(logContents: string): string {
+  const matches = logContents.match(GAME_NAME_REGEX);
+
+  if (!matches) {
+    return '';
+  }
+
+  return matches[1].trim();
+}
 
 export function parsePokemon(logContents: string): Pokemon[] {
   const evolutionsMap: Dictionary<string[]> = parseEvolutions(logContents);
   const movesMap: Dictionary<Move[]> = parseMoves(logContents);
   const machineMap: Dictionary<Machines[]> = parseMachines(logContents);
 
-  return parseBaseStats(logContents).map((pokemon) => {
+  const baseStats = parseBaseStats(logContents);
+
+  const baseStatsMap = keyBy(baseStats, (stat) => stat.name.toLowerCase());
+
+  return baseStats.map((pokemon) => {
     const evolutions = evolutionsMap[pokemon.name.toUpperCase()] || [];
     const moves = movesMap[pokemon.name.toUpperCase()];
     const machines = machineMap[pokemon.name.toUpperCase()];
     return {
       ...pokemon,
-      evolutions: evolutions.map((evolution) => fixCase(evolution)),
+      evolutions: evolutions.map((evolution) => {
+        const basicInfo = baseStatsMap[evolution.trim().toLowerCase()];
+
+        return {
+          number: basicInfo.number,
+          name: basicInfo.name,
+          type1: basicInfo.type1,
+          ...(basicInfo.type2 ? { type2: basicInfo.type2 } : {}),
+        };
+      }),
       moves,
       machines,
     };

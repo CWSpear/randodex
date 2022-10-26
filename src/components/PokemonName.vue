@@ -8,10 +8,10 @@
 
 <script lang="ts" setup>
 import PokemonTypeBackground from '@/PokemonTypeBackground.vue';
-import type { Pokemon } from '@/tools/pokemon';
+import type { BasicInfo } from '@/tools/pokemon';
 
 const props = defineProps<{
-  pokemon: Pokemon;
+  pokemon: BasicInfo;
   withName?: boolean;
 }>();
 </script>
