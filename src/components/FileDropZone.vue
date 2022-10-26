@@ -52,12 +52,13 @@ async function handleDrop(event: DragEvent) {
     emit('fileDropped', parsed);
 
     if (parsed.length === 0) {
-      error.value = 'This tool currently only works if you at least shuffle/randomize base stats.';
+      error.value =
+        'This tool currently only works if you at least shuffle/randomize base stats. If you think this is a mistake, please share your log with AwesomeVolkner on the IronMON Discord';
     }
   } catch (err) {
     console.error('Error parsing file', err);
     error.value =
-      'There was an error parsing your log. Try reaching out to Volkner on the IronMON Discord.';
+      'There was an error parsing your log. Try reaching out to AwesomeVolkner on the IronMON Discord.';
   }
 }
 </script>
@@ -92,6 +93,7 @@ async function handleDrop(event: DragEvent) {
   font-size: 1rem;
   background-color: rgba(#ff3844, 0.4);
   padding: 0.5rem 1rem;
+  max-width: 80%;
 }
 
 .msg {
