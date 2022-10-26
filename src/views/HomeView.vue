@@ -12,7 +12,9 @@
 
       <FileDropZone @fileDropped="pokemonLoaded($event)" />
 
-      <div class="caveat">Beta v1 — Only tested with FireRed logs</div>
+      <div class="caveat">
+        Beta v2 — Tested with FireRed logs. Reported to work with Gen 4 logs.
+      </div>
     </template>
   </main>
 </template>
