@@ -35,8 +35,7 @@ const error = ref('');
 
 async function handleDrop(event: DragEvent) {
   isDragging.value = false;
-  error.value =
-    'There was an error parsing your log. Try reaching out to Volkner on the IronMON Discord.';
+  error.value = '';
 
   let file: File | undefined;
   if (event.dataTransfer?.items) {
@@ -51,6 +50,10 @@ async function handleDrop(event: DragEvent) {
   try {
     const parsed = parsePokemon(await getFileContents(file));
     emit('fileDropped', parsed);
+
+    if (parsed.length === 0) {
+      error.value = 'This tool currently only works if you at least shuffle/randomize base stats.';
+    }
   } catch (err) {
     console.error('Error parsing file', err);
     error.value =

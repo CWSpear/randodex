@@ -10,6 +10,10 @@ const POKEMON_EVOLUTION_REGEX = /(.*) -> (.*)/;
 const POKEMON_MOVES_START_REGEX = /\d{3} (.+) ->  ?(.+)/;
 const MOVE_LINE_REGEX = /Level (\d{1,3}) ? ?: (.*)/;
 
+const NO_MOVES_LINE = 'Pokemon Movesets: Unchanged';
+const NO_MACHINES_LINE = 'TM Moves: Unchanged';
+const NO_STATS_LINE = 'Pokemon base stats & type: unchanged';
+
 export function parsePokemon(logContents: string): Pokemon[] {
   const evolutionsMap: Dictionary<string[]> = parseEvolutions(logContents);
   const movesMap: Dictionary<Move[]> = parseMoves(logContents);
@@ -29,10 +33,19 @@ export function parsePokemon(logContents: string): Pokemon[] {
 }
 
 export function parseBaseStats(logContents: string): BaseStats[] {
+  if (logContents.includes(NO_STATS_LINE)) {
+    return [];
+  }
+
   const lines = logContents.split('\n');
 
   // add two to skip the "start" line and the table header
   let index = lines.findIndex((line) => line === POKEMON_TABLE_START) + 2;
+
+  if (index - 2 < 0) {
+    // no stat changes
+    return [];
+  }
 
   const allPokemon: BaseStats[] = [];
   let nextLine = lines[index];
@@ -69,7 +82,13 @@ export function parseBaseStats(logContents: string): BaseStats[] {
 
 export function parseEvolutions(logContents: string): Dictionary<string[]> {
   const [, keep] = logContents.split(POKEMON_EVOLUTION_START);
+
+  if (!keep) {
+    return {};
+  }
+
   const [table] = keep.split('\n\n');
+
   const [, ...lines] = table.split('\n');
 
   return fromPairs(
@@ -96,7 +115,16 @@ export function parseEvolutions(logContents: string): Dictionary<string[]> {
 }
 
 export function parseMoves(logContents: string): Dictionary<Move[]> {
+  if (logContents.includes(NO_MOVES_LINE)) {
+    return {};
+  }
+
   const lineGroupsRaw = logContents.split(POKEMON_MOVES_START_REGEX);
+
+  if (!lineGroupsRaw) {
+    return {};
+  }
+
   let [, ...lineGroups] = lineGroupsRaw;
 
   const movesMap: Dictionary<Move[]> = {};
@@ -122,14 +150,25 @@ export function parseMoves(logContents: string): Dictionary<Move[]> {
     movesMap[pokemon] = moves;
 
     lineGroups = lineGroups.slice(3);
+    // eslint-disable-next-line no-constant-condition
   } while (true);
 
   return movesMap;
 }
 
 export function parseMachines(logContents: string): Dictionary<Machines[]> {
+  if (logContents.includes(NO_MACHINES_LINE)) {
+    return {};
+  }
+
   const [, keep] = logContents.split(MACHINE_TABLE_START);
+
+  if (!keep) {
+    return {};
+  }
+
   const [table] = keep.split('\n\n');
+
   const [, ...lines] = table.split('\n');
 
   const machineMap: Dictionary<Machines[]> = {};
