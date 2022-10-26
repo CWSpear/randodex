@@ -19,6 +19,8 @@
 
       <PokemonModal v-if="pokemonModal" :pokemon="pokemonModal" :meta="meta" />
     </div>
+
+    <div class="reset" @click="reset()">Upload a New Log</div>
   </div>
 </template>
 
@@ -47,6 +49,10 @@ const filteredPokemon = computed(() =>
 );
 
 const searchStr = ref('');
+
+function reset() {
+  window.location.reload();
+}
 
 watch(
   () => route.hash?.replace('#', '') || '',
@@ -119,6 +125,27 @@ const meta = computed<Meta>(() => ({
 
   .empty {
     //height: 1px;
+  }
+}
+
+.reset {
+  position: fixed;
+  z-index: 1;
+  background: lightgray;
+  cursor: pointer;
+  right: 1rem;
+  bottom: 1rem;
+  font-size: 1.5rem;
+  padding: 0rem 2rem;
+  border-radius: 30px;
+  border: 4px solid darkgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+
+  &:hover {
+    background: darkgray;
   }
 }
 </style>

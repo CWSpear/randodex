@@ -1,5 +1,7 @@
 <template>
   <div class="modal">
+    <div class="close" @click="closeModal()">&times;</div>
+
     <PokemonTypeBackground class="type-background" :pokemon="pokemon" />
 
     <div class="scroll-area" @click="closeModal($event)">
@@ -139,6 +141,21 @@ function closeModal(event?: MouseEvent) {
 <style lang="scss" scoped>
 $gridLineColor: #ccc;
 
+.close {
+  position: absolute;
+  z-index: 6;
+  right: 0.5rem;
+  top: 0;
+  font-size: 10rem;
+  line-height: 10rem;
+  height: 10rem;
+  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
 .table {
   margin-bottom: 2rem;
   border-collapse: collapse;
@@ -226,6 +243,7 @@ $gridLineColor: #ccc;
 }
 
 .pokemon-details {
+  cursor: auto;
   background: white;
   max-width: 600px;
   margin: 0 auto;
@@ -260,5 +278,6 @@ $gridLineColor: #ccc;
   min-width: 100vw;
   overflow-y: auto;
   padding: 2rem;
+  cursor: pointer;
 }
 </style>
