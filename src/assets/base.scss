@@ -69,6 +69,10 @@
   }
 }
 
+html {
+  font-size: 18px;
+}
+
 *,
 *::before,
 *::after {
@@ -85,7 +89,6 @@ body {
   transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
   font-family: 'Inconsolata', monospace;
-  font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

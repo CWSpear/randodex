@@ -44,7 +44,7 @@ export interface BaseStats extends BasicInfo {
   specialAttack: number;
   specialDefense: number;
   speed: number;
-  ability1: string;
+  ability1?: string;
   ability2?: string;
 }
 

@@ -89,7 +89,9 @@ export function parseBaseStats(logContents: string): BaseStats[] {
       specialAttack: +satk,
       specialDefense: +sdef,
       speed: +spd,
-      ability1: fixCase(ability1?.trim()),
+      ...(ability1?.trim() && !ability1.trim().startsWith('-')
+        ? { ability1: fixCase(ability1.trim()) }
+        : {}),
       ...(ability2?.trim() && !ability2.trim().startsWith('-')
         ? { ability2: fixCase(ability2.trim()) }
         : {}),

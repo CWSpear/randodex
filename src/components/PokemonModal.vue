@@ -6,6 +6,30 @@
       <div class="pokemon-details">
         <PokemonSprite :size="3" :withName="true" :pokemon="pokemon" />
 
+        <div class="type-and-abilities" v-if="pokemon.type1 || pokemon.ability1">
+          <div class="types">
+            <template v-if="pokemon.type1">
+              <PokemonType :type="pokemon.type1" />
+            </template>
+            <template v-if="pokemon.type2">
+              &nbsp;/&nbsp;
+              <PokemonType :type="pokemon.type2" />
+            </template>
+          </div>
+          <div class="abilities" v-if="pokemon.ability1">
+            <table class="stats-table table">
+              <tr>
+                <th title="Health Points">Ability 1</th>
+                <td>{{ pokemon.ability1 }}</td>
+              </tr>
+              <tr v-if="pokemon.ability2">
+                <th title="Attack">Ability 2</th>
+                <td>{{ pokemon.ability2 }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
         <div class="stats">
           <table class="stats-table table">
             <tr class="row">
@@ -83,6 +107,7 @@
 
 <script lang="ts" setup>
 import PokemonSprite from '@/components/PokemonSprite.vue';
+import PokemonType from '@/components/PokemonType.vue';
 import StatsChart from '@/components/StatsChart.vue';
 import PokemonTypeBackground from '@/PokemonTypeBackground.vue';
 import type { BasicInfo, Meta, Pokemon } from '@/tools/pokemon';
@@ -207,6 +232,23 @@ $gridLineColor: #ccc;
   padding: 1rem 2rem 2rem;
 
   text-align: center;
+}
+
+.type-and-abilities {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .types {
+    display: flex;
+    align-items: center;
+  }
+
+  .abilities {
+    margin-top: 2rem;
+  }
 }
 
 .scroll-area {
