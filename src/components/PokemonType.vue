@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Type } from '@/tools/pokemon';
+import type { Type } from '@/tools/pokemon';
 
 const props = defineProps<{
   type: Type;
