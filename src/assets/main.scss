@@ -1,0 +1,162 @@
+@import 'src/assets/base';
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+.normal-type {
+  color: var(--normal-type);
+  &-bg {
+    background-color: var(--normal-type);
+    color: white;
+  }
+}
+
+.fire-type {
+  color: var(--fire-type);
+  &-bg {
+    background-color: var(--fire-type);
+    color: white;
+  }
+}
+
+.water-type {
+  color: var(--water-type);
+  &-bg {
+    background-color: var(--water-type);
+    color: white;
+  }
+}
+
+.electric-type {
+  color: var(--electric-type);
+  &-bg {
+    background-color: var(--electric-type);
+    color: white;
+  }
+}
+
+.grass-type {
+  color: var(--grass-type);
+  &-bg {
+    background-color: var(--grass-type);
+    color: white;
+  }
+}
+
+.ice-type {
+  color: var(--ice-type);
+  &-bg {
+    background-color: var(--ice-type);
+    color: white;
+  }
+}
+
+.fighting-type {
+  color: var(--fighting-type);
+  &-bg {
+    background-color: var(--fighting-type);
+    color: white;
+  }
+}
+
+.poison-type {
+  color: var(--poison-type);
+  &-bg {
+    background-color: var(--poison-type);
+    color: white;
+  }
+}
+
+.ground-type {
+  color: var(--ground-type);
+  &-bg {
+    background-color: var(--ground-type);
+    color: white;
+  }
+}
+
+.flying-type {
+  color: var(--flying-type);
+  &-bg {
+    background-color: var(--flying-type);
+    color: white;
+  }
+}
+
+.psychic-type {
+  color: var(--psychic-type);
+  &-bg {
+    background-color: var(--psychic-type);
+    color: white;
+  }
+}
+
+.bug-type {
+  color: var(--bug-type);
+  &-bg {
+    background-color: var(--bug-type);
+    color: white;
+  }
+}
+
+.rock-type {
+  color: var(--rock-type);
+  &-bg {
+    background-color: var(--rock-type);
+    color: white;
+  }
+}
+
+.ghost-type {
+  color: var(--ghost-type);
+  &-bg {
+    background-color: var(--ghost-type);
+    color: white;
+  }
+}
+
+.dragon-type {
+  color: var(--dragon-type);
+  &-bg {
+    background-color: var(--dragon-type);
+    color: white;
+  }
+}
+
+.dark-type {
+  color: var(--dark-type);
+  &-bg {
+    background-color: var(--dark-type);
+    color: white;
+  }
+}
+
+.steel-type {
+  color: var(--steel-type);
+  &-bg {
+    background-color: var(--steel-type);
+    color: white;
+  }
+}
+
+.fairy-type {
+  color: var(--fairy-type);
+  &-bg {
+    background-color: var(--fairy-type);
+    color: white;
+  }
+}
+
+.outline {
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}

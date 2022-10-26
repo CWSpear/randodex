@@ -1,0 +1,93 @@
+image: docker.matchbooklab.com/ci
+
+##########
+# STAGES #
+##########
+
+stages:
+  - build
+  - push
+  - deploy
+  - cleanup
+
+variables:
+  COMPOSE_DOCKER_CLI_BUILD: '1'
+  DOCKER_BUILDKIT: '1'
+  BUILDKIT_PROGRESS: plain
+
+#########
+# BUILD #
+#########
+
+build:
+  stage: build
+  variables:
+    DOCKER_TAG: $CI_COMMIT_REF_SLUG
+    HASH: $CI_COMMIT_SHORT_SHA
+  script:
+    # run this on the runner host
+    - eval $(dmport -i "$RUNNER_MACHINE_CONFIG")
+    - echo "DOCKER_TAG -> $DOCKER_TAG"
+    - echo "HASH -> $HASH"
+    - docker-compose -f docker-compose.yml -f docker-compose.production.yml -p randodex_${HASH} build --pull
+
+########
+# PUSH #
+########
+
+push:
+  stage: push
+  only:
+    - master
+  variables:
+    DOCKER_TAG: $CI_COMMIT_REF_SLUG
+    HASH: $CI_COMMIT_SHORT_SHA
+  script:
+    # run this on the runner host
+    - eval $(dmport -i "$RUNNER_MACHINE_CONFIG")
+    - echo "DOCKER_TAG -> $DOCKER_TAG"
+    - echo "HASH -> $HASH"
+    - docker-compose -f docker-compose.yml -f docker-compose.production.yml push
+
+
+##########
+# DEPLOY #
+##########
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  variables:
+    DOCKER_TAG: $CI_COMMIT_REF_SLUG
+    HASH: $CI_COMMIT_SHORT_SHA
+  script:
+    # run this on the production host
+    - eval $(dmport -i "$PANDORA_MACHINE_CONFIG")
+    - echo "DOCKER_TAG -> $DOCKER_TAG"
+    - echo "HASH -> $HASH"
+    - docker-compose -f docker-compose.yml -f docker-compose.production.yml pull
+    - docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
+
+
+###########
+# CLEANUP #
+###########
+
+cleanup:runner:
+  stage: cleanup
+  when: always
+  script:
+    # run this on the runner host
+    - eval $(dmport -i "$RUNNER_MACHINE_CONFIG")
+    - docker image prune -f && docker volume prune -f && docker builder prune -f --keep-storage 50000000000
+
+cleanup:
+  stage: cleanup
+  variables:
+    GIT_STRATEGY: none
+  allow_failure: true
+  script:
+    # run this on the production host
+    - eval $(dmport -i "$PANDORA_MACHINE_CONFIG")
+    - docker system prune -af --volumes

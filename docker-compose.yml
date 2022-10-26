@@ -1,0 +1,8 @@
+version: '3.9'
+
+services:
+  website:
+    build:
+      context: ./
+    ports:
+      - '8888:80'
