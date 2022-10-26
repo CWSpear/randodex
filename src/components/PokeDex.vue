@@ -120,8 +120,8 @@ const meta = computed<Meta>(() => ({
 }
 
 .pokecard {
-  flex: 1 0 405px;
-  min-width: 405px;
+  flex: 1 0 320px;
+  min-width: 320px;
 
   .empty {
     //height: 1px;
