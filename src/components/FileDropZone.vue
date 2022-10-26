@@ -7,9 +7,15 @@
     @dragenter.prevent="isDragging = true"
     :class="{ dragging: isDragging }"
   >
-    Drop your&nbsp;
-    <span class="code">seedname.gba.log</span>
-    &nbsp;file here
+    <div class="msg">
+      Drop your
+      <span class="code">seedname.gba.log</span>
+      file here
+    </div>
+
+    <div class="error" v-if="error">
+      {{ error }}
+    </div>
   </div>
 </template>
 
@@ -25,8 +31,12 @@ const emit = defineEmits<{
   (event: 'fileDropped', pokemon: Pokemon[]): void;
 }>();
 
+const error = ref('');
+
 async function handleDrop(event: DragEvent) {
   isDragging.value = false;
+  error.value =
+    'There was an error parsing your log. Try reaching out to Volkner on the IronMON Discord.';
 
   let file: File | undefined;
   if (event.dataTransfer?.items) {
@@ -38,7 +48,14 @@ async function handleDrop(event: DragEvent) {
     file = event.dataTransfer?.files[0]!;
   }
 
-  emit('fileDropped', parsePokemon(await getFileContents(file)));
+  try {
+    const parsed = parsePokemon(await getFileContents(file));
+    emit('fileDropped', parsed);
+  } catch (err) {
+    console.error('Error parsing file', err);
+    error.value =
+      'There was an error parsing your log. Try reaching out to Volkner on the IronMON Discord.';
+  }
 }
 </script>
 
@@ -49,6 +66,7 @@ async function handleDrop(event: DragEvent) {
   border: 4px dashed grey;
   background: whitesmoke;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   font-size: 3rem;
@@ -63,6 +81,17 @@ async function handleDrop(event: DragEvent) {
   padding: 0 0.7rem;
   border: rgba(#ffba48, 0.8) 4px solid;
   border-radius: 4px;
+  pointer-events: none;
+}
+
+.error {
+  pointer-events: none;
+  font-size: 1rem;
+  background-color: rgba(#ff3844, 0.4);
+  padding: 0.5rem 1rem;
+}
+
+.msg {
   pointer-events: none;
 }
 </style>
