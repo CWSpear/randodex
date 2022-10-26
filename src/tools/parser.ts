@@ -37,7 +37,7 @@ export function parseBaseStats(logContents: string): BaseStats[] {
     return [];
   }
 
-  const lines = logContents.split('\n');
+  const lines = logContents.split(/\r?\n/);
 
   // add two to skip the "start" line and the table header
   let index = lines.findIndex((line) => line === POKEMON_TABLE_START) + 2;
@@ -87,16 +87,16 @@ export function parseEvolutions(logContents: string): Dictionary<string[]> {
     return {};
   }
 
-  const [table] = keep.split('\n\n');
+  const [table] = keep.split(/\r?\n\r?\n/);
 
-  const [, ...lines] = table.split('\n');
+  const [, ...lines] = table.split(/\r?\n/);
 
   return fromPairs(
     lines.map((evoLine) => {
       const matches = evoLine.match(POKEMON_EVOLUTION_REGEX)!;
 
       if (!matches) {
-        console.log('did not match', evoLine);
+        console.error('did not match', evoLine);
         return [];
       }
 
@@ -137,7 +137,7 @@ export function parseMoves(logContents: string): Dictionary<Move[]> {
     }
 
     const moves = movesRaw
-      .split('\n')
+      .split(/\r?\n/)
       .filter((line) => MOVE_LINE_REGEX.test(line))
       .map((line) => {
         const [, level, name] = line.match(MOVE_LINE_REGEX)!;
@@ -167,9 +167,9 @@ export function parseMachines(logContents: string): Dictionary<Machines[]> {
     return {};
   }
 
-  const [table] = keep.split('\n\n');
+  const [table] = keep.split(/\r?\n\r?\n/);
 
-  const [, ...lines] = table.split('\n');
+  const [, ...lines] = table.split(/\r?\n/);
 
   const machineMap: Dictionary<Machines[]> = {};
   lines.forEach((line) => {
