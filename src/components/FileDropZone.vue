@@ -63,5 +63,6 @@ async function handleDrop(event: DragEvent) {
   padding: 0 0.7rem;
   border: rgba(#ffba48, 0.8) 4px solid;
   border-radius: 4px;
+  pointer-events: none;
 }
 </style>

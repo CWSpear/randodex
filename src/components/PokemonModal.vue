@@ -163,6 +163,8 @@ $gridLineColor: #ccc;
     border-radius: 50%;
 
     &.linkable-evo-sprite {
+      display: block;
+
       &:hover {
         background: #ddd;
       }
