@@ -105,6 +105,7 @@ const meta = computed<Meta>(() => ({
 <style lang="scss" scoped>
 .pokedex-wrapper {
   position: relative;
+  padding-bottom: 5rem;
 }
 
 .search {
