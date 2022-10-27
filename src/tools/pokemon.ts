@@ -26,7 +26,7 @@ export enum Type {
 
 export interface ParsedResults {
   pokemon: Pokemon[];
-  version: GameVersion;
+  version: GameVersion | null;
 }
 
 export interface Move {

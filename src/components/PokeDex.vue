@@ -28,11 +28,9 @@
 import PokemonCard from '@/components/PokemonCard.vue';
 import PokemonModal from '@/components/PokemonModal.vue';
 import PokemonSearch from '@/components/PokemonSearch.vue';
-import router from '@/router';
-import { GameVersion } from '@/tools/pokemon';
-import type { Meta, Pokemon } from '@/tools/pokemon';
+import type { GameVersion, Meta, Pokemon } from '@/tools/pokemon';
 import { closePokemonModal, getPokemonForModal, openPokemonModal } from '@/tools/select';
-import { flatMap, max, maxBy, min, minBy } from 'lodash';
+import { flatMap, max, min } from 'lodash';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -41,7 +39,7 @@ const pokemonModal = computed(() => getPokemonForModal());
 
 const props = defineProps<{
   pokemon: Pokemon[];
-  version: GameVersion;
+  version: GameVersion | null;
 }>();
 
 const filteredPokemon = computed(() =>

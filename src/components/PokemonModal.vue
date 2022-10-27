@@ -129,17 +129,18 @@ import PokemonSprite from '@/components/PokemonSprite.vue';
 import PokemonType from '@/components/PokemonType.vue';
 import PokemonTypeBackground from '@/components/PokemonTypeBackground.vue';
 import StatsChart from '@/components/StatsChart.vue';
-import type { Meta, Pokemon } from '@/tools/pokemon';
-import { GameVersion } from '@/tools/pokemon';
+import type { GameVersion, Meta, Pokemon } from '@/tools/pokemon';
 import { closePokemonModal } from '@/tools/select';
-import { GymTechnicalMachine, gymTechnicalMachines } from '@/tools/static';
-import { Dictionary, keyBy, max, padStart } from 'lodash';
+import type { GymTechnicalMachine } from '@/tools/static';
+import { gymTechnicalMachines } from '@/tools/static';
+import type { Dictionary } from 'lodash';
+import { keyBy, max, padStart } from 'lodash';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
   pokemon: Pokemon;
   meta: Meta;
-  version: GameVersion;
+  version: GameVersion | null;
 }>();
 
 const showMoves = ref(true);
@@ -149,7 +150,7 @@ const showMachines = ref(true);
 const gymTmFilter = ref(false);
 
 const gymTmInfo = computed<Dictionary<GymTechnicalMachine>>(() =>
-  keyBy(gymTechnicalMachines[props.version] || [], (tm) => tm.number),
+  keyBy((props.version ? gymTechnicalMachines[props.version] : []) || [], (tm) => tm.number),
 );
 
 const maxDigitLength = computed(

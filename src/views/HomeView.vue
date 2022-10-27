@@ -27,8 +27,7 @@
 <script setup lang="ts">
 import FileDropZone from '@/components/FileDropZone.vue';
 import PokeDex from '@/components/PokeDex.vue';
-import { GameVersion, ParsedResults } from '@/tools/pokemon';
-import type { Pokemon } from '@/tools/pokemon';
+import type { GameVersion, ParsedResults, Pokemon } from '@/tools/pokemon';
 import { ref } from 'vue';
 
 const pokemon = ref<Pokemon[]>([]);
