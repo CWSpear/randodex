@@ -6,7 +6,8 @@
 
     <div class="scroll-area" @click="closeModal($event)">
       <div class="pokemon-details">
-        <PokemonSprite :size="3" :withName="true" :pokemon="pokemon" />
+        <PokemonSprite :size="3" :withName="false" :pokemon="pokemon" />
+        <h1>{{ pokemon.name }}</h1>
 
         <div class="type-and-abilities" v-if="pokemon.type1 || pokemon.ability1">
           <div class="types">
@@ -177,6 +178,10 @@ function closeModal(event?: MouseEvent) {
 <style lang="scss" scoped>
 $gridLineColor: #ccc;
 
+h1 {
+  line-height: 2rem;
+}
+
 .close {
   position: absolute;
   z-index: 6;
@@ -289,7 +294,7 @@ $gridLineColor: #ccc;
 }
 
 .type-and-abilities {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
