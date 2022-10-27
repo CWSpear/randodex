@@ -110,11 +110,11 @@
 <script lang="ts" setup>
 import PokemonSprite from '@/components/PokemonSprite.vue';
 import PokemonType from '@/components/PokemonType.vue';
+import PokemonTypeBackground from '@/components/PokemonTypeBackground.vue';
 import StatsChart from '@/components/StatsChart.vue';
-import PokemonTypeBackground from '@/PokemonTypeBackground.vue';
-import type { BasicInfo, Meta, Pokemon } from '@/tools/pokemon';
+import type { Meta, Pokemon } from '@/tools/pokemon';
 import { closePokemonModal } from '@/tools/select';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps<{
   pokemon: Pokemon;

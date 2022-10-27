@@ -15,6 +15,11 @@
       <div class="caveat">
         Beta v2 — Tested with FireRed logs. Reported to work with Gen 4 logs.
       </div>
+
+      <div class="footer">
+        Make by @AwesomeVolkner on the IronMON Discord.
+        <a href="https://github.com/CWSpear/randodex">Source code on GitHub</a>
+      </div>
     </template>
   </main>
 </template>
@@ -56,5 +61,17 @@ function pokemonLoaded(mon: Pokemon[]) {
 }
 
 .caveat {
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 1rem 3rem;
+
+  text-align: right;
+  background-color: #333;
+  color: whitesmoke;
 }
 </style>

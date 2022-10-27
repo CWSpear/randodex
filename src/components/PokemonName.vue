@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import PokemonTypeBackground from '@/PokemonTypeBackground.vue';
+import PokemonTypeBackground from '@/components/PokemonTypeBackground.vue';
 import type { BasicInfo } from '@/tools/pokemon';
 
 const props = defineProps<{

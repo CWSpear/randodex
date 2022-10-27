@@ -9,7 +9,7 @@ services:
       - proxy # only the container that interfaces with the proxy needs this
     labels:
       traefik.docker.network: pandora_proxy
-      traefik.frontend.rule: Host:randodex.cwspear.ninja,randodex.com,www.randodex.com
+      traefik.frontend.rule: Host:randodex.com,www.randodex.com
       traefik.enable: true
       traefik.port: 80
       traefik.http.middlewares.test-compress.compress: true

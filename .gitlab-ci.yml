@@ -21,6 +21,8 @@ variables:
 
 build:
   stage: build
+  only:
+    - master
   variables:
     DOCKER_TAG: $CI_COMMIT_REF_SLUG
     HASH: $CI_COMMIT_SHORT_SHA

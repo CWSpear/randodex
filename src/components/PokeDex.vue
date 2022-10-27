@@ -67,18 +67,18 @@ watch(
 );
 
 const meta = computed<Meta>(() => ({
-  minHp: minBy(props.pokemon, (mon) => mon.hp)!.hp,
-  maxHp: maxBy(props.pokemon, (mon) => mon.hp)!.hp,
-  minAttack: minBy(props.pokemon, (mon) => mon.attack)!.attack,
-  maxAttack: maxBy(props.pokemon, (mon) => mon.attack)!.attack,
-  minDefense: minBy(props.pokemon, (mon) => mon.defense)!.defense,
-  maxDefense: maxBy(props.pokemon, (mon) => mon.defense)!.defense,
-  minSpecialAttack: minBy(props.pokemon, (mon) => mon.specialAttack)!.specialAttack,
-  maxSpecialAttack: maxBy(props.pokemon, (mon) => mon.specialAttack)!.specialAttack,
-  minSpecialDefense: minBy(props.pokemon, (mon) => mon.specialDefense)!.specialDefense,
-  maxSpecialDefense: maxBy(props.pokemon, (mon) => mon.specialDefense)!.specialDefense,
-  minSpeed: minBy(props.pokemon, (mon) => mon.speed)!.speed,
-  maxSpeed: maxBy(props.pokemon, (mon) => mon.speed)!.speed,
+  // minHp: minBy(props.pokemon, (mon) => mon.hp)!.hp,
+  // maxHp: maxBy(props.pokemon, (mon) => mon.hp)!.hp,
+  // minAttack: minBy(props.pokemon, (mon) => mon.attack)!.attack,
+  // maxAttack: maxBy(props.pokemon, (mon) => mon.attack)!.attack,
+  // minDefense: minBy(props.pokemon, (mon) => mon.defense)!.defense,
+  // maxDefense: maxBy(props.pokemon, (mon) => mon.defense)!.defense,
+  // minSpecialAttack: minBy(props.pokemon, (mon) => mon.specialAttack)!.specialAttack,
+  // maxSpecialAttack: maxBy(props.pokemon, (mon) => mon.specialAttack)!.specialAttack,
+  // minSpecialDefense: minBy(props.pokemon, (mon) => mon.specialDefense)!.specialDefense,
+  // maxSpecialDefense: maxBy(props.pokemon, (mon) => mon.specialDefense)!.specialDefense,
+  // minSpeed: minBy(props.pokemon, (mon) => mon.speed)!.speed,
+  // maxSpeed: maxBy(props.pokemon, (mon) => mon.speed)!.speed,
   min: min(
     flatMap(props.pokemon, (mon) => [
       mon.hp,

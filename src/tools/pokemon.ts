@@ -55,18 +55,18 @@ export interface Pokemon extends BaseStats {
 }
 
 export interface Meta {
-  minHp: number;
-  maxHp: number;
-  minAttack: number;
-  maxAttack: number;
-  minDefense: number;
-  maxDefense: number;
-  minSpecialAttack: number;
-  maxSpecialAttack: number;
-  minSpecialDefense: number;
-  maxSpecialDefense: number;
-  minSpeed: number;
-  maxSpeed: number;
+  // minHp: number;
+  // maxHp: number;
+  // minAttack: number;
+  // maxAttack: number;
+  // minDefense: number;
+  // maxDefense: number;
+  // minSpecialAttack: number;
+  // maxSpecialAttack: number;
+  // minSpecialDefense: number;
+  // maxSpecialDefense: number;
+  // minSpeed: number;
+  // maxSpeed: number;
   min: number;
   max: number;
 }
