@@ -17,7 +17,7 @@
       </div>
 
       <div class="footer">
-        Make by @AwesomeVolkner on the IronMON Discord.
+        Made by @AwesomeVolkner on the IronMON Discord.
         <a target="_blank" href="https://github.com/CWSpear/randodex">Source code on GitHub</a>
       </div>
     </template>
