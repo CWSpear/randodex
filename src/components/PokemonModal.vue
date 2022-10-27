@@ -96,13 +96,26 @@
             </tr>
           </table>
 
+          <!--<label v-if="gymTmInfo.length > 0">-->
+          <!--  <input type="checkbox" v-model="gymTmFilter" />-->
+          <!--  Show Gym TMs-->
+          <!--</label>-->
           <table class="machines-table table" v-if="showMachines">
             <tr
               :key="machine.number + '' + (machine.isHM + '')"
               v-for="machine in pokemon.machines"
             >
-              <th class="machine-number">{{ machine.isHM ? 'H' : 'T' }}M {{ machine.number }}</th>
-              <td class="machine-name">{{ machine.move }}</td>
+              <th class="machine-number">
+                <div class="flex">
+                  <span class="leader-badge" v-if="!machine.isHM && gymTmInfo[machine.number]">
+                    {{ gymTmInfo[machine.number].leader }}
+                  </span>
+                  <strong>{{ machine.isHM ? 'H' : 'T' }}M{{ autoPad(machine.number) }}</strong>
+                </div>
+              </th>
+              <td class="machine-name">
+                {{ machine.move }}
+              </td>
             </tr>
           </table>
         </div>
@@ -117,17 +130,35 @@ import PokemonType from '@/components/PokemonType.vue';
 import PokemonTypeBackground from '@/components/PokemonTypeBackground.vue';
 import StatsChart from '@/components/StatsChart.vue';
 import type { Meta, Pokemon } from '@/tools/pokemon';
+import { GameVersion } from '@/tools/pokemon';
 import { closePokemonModal } from '@/tools/select';
-import { ref } from 'vue';
+import { GymTechnicalMachine, gymTechnicalMachines } from '@/tools/static';
+import { Dictionary, keyBy, max, padStart } from 'lodash';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
   pokemon: Pokemon;
   meta: Meta;
+  version: GameVersion;
 }>();
 
 const showMoves = ref(true);
 
 const showMachines = ref(true);
+
+const gymTmFilter = ref(false);
+
+const gymTmInfo = computed<Dictionary<GymTechnicalMachine>>(() =>
+  keyBy(gymTechnicalMachines[props.version] || [], (tm) => tm.number),
+);
+
+const maxDigitLength = computed(
+  () => (max(props.pokemon.machines.map((m) => m.number)) + '').length,
+);
+
+function autoPad(num: number): string {
+  return padStart(num + '', maxDigitLength.value, '0');
+}
 
 function closeModal(event?: MouseEvent) {
   if (event) {
@@ -283,5 +314,22 @@ $gridLineColor: #ccc;
   overflow-y: auto;
   padding: 2rem;
   cursor: pointer;
+}
+
+.machine-number {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.leader-badge {
+  font-weight: 400;
+  font-size: 0.7rem;
+  margin-right: 0.25rem;
+}
+
+.flex {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>

@@ -1,6 +1,6 @@
 import type { Dictionary } from 'lodash';
 import { compact, fromPairs, keyBy } from 'lodash';
-import type { BaseStats, Machine, Move, Pokemon, Type } from './pokemon';
+import type { BaseStats, GameVersion, Machine, Move, Pokemon, Type } from './pokemon';
 import { cleanUpString } from './util';
 
 const MACHINE_TABLE_START = '--TM Compatibility--';
@@ -15,14 +15,14 @@ const NO_MOVES_LINE = 'Pokemon Movesets: Unchanged';
 const NO_MACHINES_LINE = 'TM Moves: Unchanged';
 const NO_STATS_LINE = 'Pokemon base stats & type: unchanged';
 
-export function parseGameVersion(logContents: string): string {
+export function parseGameVersion(logContents: string): GameVersion | null {
   const matches = logContents.match(GAME_NAME_REGEX);
 
   if (!matches) {
-    return '';
+    return null;
   }
 
-  return matches[1].trim();
+  return <GameVersion>matches[1].replace(/(version|pokemon)/gi, '').trim();
 }
 
 export function parsePokemon(logContents: string): Pokemon[] {

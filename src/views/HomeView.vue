@@ -1,6 +1,6 @@
 <template>
   <main :class="{ 'drop-zone': !pokemon.length }">
-    <PokeDex v-if="pokemon.length" :pokemon="pokemon" />
+    <PokeDex v-if="pokemon.length" :pokemon="pokemon" :version="version" />
     <template v-else>
       <div class="info">
         <div class="title">Randomizer Log &rarr; PokeDex</div>
@@ -27,13 +27,16 @@
 <script setup lang="ts">
 import FileDropZone from '@/components/FileDropZone.vue';
 import PokeDex from '@/components/PokeDex.vue';
+import { GameVersion, ParsedResults } from '@/tools/pokemon';
 import type { Pokemon } from '@/tools/pokemon';
 import { ref } from 'vue';
 
 const pokemon = ref<Pokemon[]>([]);
+const version = ref<GameVersion | null>(null);
 
-function pokemonLoaded(mon: Pokemon[]) {
-  pokemon.value = mon;
+function pokemonLoaded(results: ParsedResults) {
+  pokemon.value = results.pokemon;
+  version.value = results.version;
 }
 </script>
 

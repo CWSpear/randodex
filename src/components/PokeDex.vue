@@ -17,7 +17,7 @@
       <div class="empty pokecard"><!-- intentionally left here --></div>
       <div class="empty pokecard"><!-- intentionally left here --></div>
 
-      <PokemonModal v-if="pokemonModal" :pokemon="pokemonModal" :meta="meta" />
+      <PokemonModal v-if="pokemonModal" :pokemon="pokemonModal" :meta="meta" :version="version" />
     </div>
 
     <div class="reset" @click="reset()">Upload a New Log</div>
@@ -29,6 +29,7 @@ import PokemonCard from '@/components/PokemonCard.vue';
 import PokemonModal from '@/components/PokemonModal.vue';
 import PokemonSearch from '@/components/PokemonSearch.vue';
 import router from '@/router';
+import { GameVersion } from '@/tools/pokemon';
 import type { Meta, Pokemon } from '@/tools/pokemon';
 import { closePokemonModal, getPokemonForModal, openPokemonModal } from '@/tools/select';
 import { flatMap, max, maxBy, min, minBy } from 'lodash';
@@ -40,6 +41,7 @@ const pokemonModal = computed(() => getPokemonForModal());
 
 const props = defineProps<{
   pokemon: Pokemon[];
+  version: GameVersion;
 }>();
 
 const filteredPokemon = computed(() =>

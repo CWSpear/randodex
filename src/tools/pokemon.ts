@@ -1,3 +1,8 @@
+export enum GameVersion {
+  FireRed = 'Fire Red',
+  LeafGreen = 'Leaf Green',
+}
+
 export enum Type {
   Normal = 'Normal',
   Fire = 'Fire',
@@ -17,6 +22,11 @@ export enum Type {
   Dragon = 'Dragon',
   Steel = 'Steel',
   Fairy = 'Fairy',
+}
+
+export interface ParsedResults {
+  pokemon: Pokemon[];
+  version: GameVersion;
 }
 
 export interface Move {

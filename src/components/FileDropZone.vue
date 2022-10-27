@@ -22,14 +22,14 @@
 <script setup lang="ts">
 import { parsePokemonJson } from '@/tools/parser-json';
 import { parseGameVersion, parsePokemon } from '@/tools/parser-log';
-import type { Pokemon } from '@/tools/pokemon';
+import type { ParsedResults } from '@/tools/pokemon';
 import { getFileContents } from '@/tools/util';
 import { ref } from 'vue';
 
 const isDragging = ref(false);
 
 const emit = defineEmits<{
-  (event: 'fileDropped', pokemon: Pokemon[]): void;
+  (event: 'fileDropped', results: ParsedResults): void;
 }>();
 
 const error = ref('');
@@ -51,13 +51,11 @@ async function handleDrop(event: DragEvent) {
   try {
     const logContents = await getFileContents(file);
 
-    // console.log('version', parseGameVersion(logContents));
-
-    console.log(file, logContents);
     const parsed = file?.name.endsWith('json')
       ? parsePokemonJson(logContents)
       : parsePokemon(logContents);
-    emit('fileDropped', parsed);
+
+    emit('fileDropped', { pokemon: parsed, version: parseGameVersion(logContents) });
 
     if (parsed.length === 0) {
       error.value =
