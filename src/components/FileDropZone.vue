@@ -20,7 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import { parseGameVersion, parsePokemon } from '@/tools/parser';
+import { parsePokemonJson } from '@/tools/parser-json';
+import { parseGameVersion, parsePokemon } from '@/tools/parser-log';
 import type { Pokemon } from '@/tools/pokemon';
 import { getFileContents } from '@/tools/util';
 import { ref } from 'vue';
@@ -50,9 +51,12 @@ async function handleDrop(event: DragEvent) {
   try {
     const logContents = await getFileContents(file);
 
-    console.log('version', parseGameVersion(logContents));
+    // console.log('version', parseGameVersion(logContents));
 
-    const parsed = parsePokemon(logContents);
+    console.log(file, logContents);
+    const parsed = file?.name.endsWith('json')
+      ? parsePokemonJson(logContents)
+      : parsePokemon(logContents);
     emit('fileDropped', parsed);
 
     if (parsed.length === 0) {

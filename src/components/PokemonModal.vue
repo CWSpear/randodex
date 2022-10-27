@@ -21,12 +21,16 @@
           <div class="abilities" v-if="pokemon.ability1">
             <table class="stats-table table">
               <tr>
-                <th title="Health Points">Ability 1</th>
+                <th>Ability 1</th>
                 <td>{{ pokemon.ability1 }}</td>
               </tr>
               <tr v-if="pokemon.ability2">
-                <th title="Attack">Ability 2</th>
+                <th>Ability 2</th>
                 <td>{{ pokemon.ability2 }}</td>
+              </tr>
+              <tr v-if="pokemon.ability3">
+                <th>Ability 3</th>
+                <td>{{ pokemon.ability3 }}</td>
               </tr>
             </table>
           </div>

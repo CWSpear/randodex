@@ -1,6 +1,16 @@
 import { lowerCase, startCase } from 'lodash';
 
-export function fixCase(str?: string): string {
+export function cleanUpString(str?: string | null): string {
+  if (!str) {
+    return '';
+  }
+
+  str = str.trim();
+
+  if (/^-+$/.test(str)) {
+    return '';
+  }
+
   return startCase(lowerCase(str));
 }
 

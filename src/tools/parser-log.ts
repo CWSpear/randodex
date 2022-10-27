@@ -1,7 +1,7 @@
 import type { Dictionary } from 'lodash';
 import { compact, fromPairs, keyBy } from 'lodash';
-import type { BaseStats, Machines, Move, Pokemon, Type } from './pokemon';
-import { fixCase } from './util';
+import type { BaseStats, Machine, Move, Pokemon, Type } from './pokemon';
+import { cleanUpString } from './util';
 
 const MACHINE_TABLE_START = '--TM Compatibility--';
 const POKEMON_TABLE_START = '--Pokemon Base Stats & Types--';
@@ -28,7 +28,7 @@ export function parseGameVersion(logContents: string): string {
 export function parsePokemon(logContents: string): Pokemon[] {
   const evolutionsMap: Dictionary<string[]> = parseEvolutions(logContents);
   const movesMap: Dictionary<Move[]> = parseMoves(logContents);
-  const machineMap: Dictionary<Machines[]> = parseMachines(logContents);
+  const machineMap: Dictionary<Machine[]> = parseMachines(logContents);
 
   const baseStats = parseBaseStats(logContents);
 
@@ -80,9 +80,9 @@ export function parseBaseStats(logContents: string): BaseStats[] {
 
     const pokemon: BaseStats = {
       number: +num,
-      name: fixCase(name.trim()),
-      type1: <Type>fixCase(type1),
-      ...(type2 ? { type2: <Type | undefined>fixCase(type2) } : {}),
+      name: cleanUpString(name.trim()),
+      type1: <Type>cleanUpString(type1),
+      ...(type2 ? { type2: <Type | undefined>cleanUpString(type2) } : {}),
       hp: +hp,
       attack: +atk,
       defense: +def,
@@ -90,10 +90,10 @@ export function parseBaseStats(logContents: string): BaseStats[] {
       specialDefense: +sdef,
       speed: +spd,
       ...(ability1?.trim() && !ability1.trim().startsWith('-')
-        ? { ability1: fixCase(ability1.trim()) }
+        ? { ability1: cleanUpString(ability1.trim()) }
         : {}),
       ...(ability2?.trim() && !ability2.trim().startsWith('-')
-        ? { ability2: fixCase(ability2.trim()) }
+        ? { ability2: cleanUpString(ability2.trim()) }
         : {}),
     };
 
@@ -133,7 +133,7 @@ export function parseEvolutions(logContents: string): Dictionary<string[]> {
       return [
         base.trim(),
         evolutions
-          .map((evo) => fixCase(evo.trim()))
+          .map((evo) => cleanUpString(evo.trim()))
           .filter((evo) => !!evo && evo !== ',' && evo !== 'And'),
       ];
     }),
@@ -169,7 +169,7 @@ export function parseMoves(logContents: string): Dictionary<Move[]> {
         const [, level, name] = line.match(MOVE_LINE_REGEX)!;
         return {
           level: +level,
-          name: fixCase(name.trim()),
+          name: cleanUpString(name.trim()),
         };
       });
 
@@ -182,7 +182,7 @@ export function parseMoves(logContents: string): Dictionary<Move[]> {
   return movesMap;
 }
 
-export function parseMachines(logContents: string): Dictionary<Machines[]> {
+export function parseMachines(logContents: string): Dictionary<Machine[]> {
   if (logContents.includes(NO_MACHINES_LINE)) {
     return {};
   }
@@ -197,7 +197,7 @@ export function parseMachines(logContents: string): Dictionary<Machines[]> {
 
   const [, ...lines] = table.split(/\r?\n/);
 
-  const machineMap: Dictionary<Machines[]> = {};
+  const machineMap: Dictionary<Machine[]> = {};
   lines.forEach((line) => {
     const [pokemonRaw, ...machinesRaw] = line.split('|');
     const pokemon = pokemonRaw.replace(/\d{1,3} /, '').trim();
@@ -217,7 +217,7 @@ export function parseMachines(logContents: string): Dictionary<Machines[]> {
 
         return {
           number: +num,
-          move: fixCase(name.trim()),
+          move: cleanUpString(name.trim()),
           isHM: typeLetter === 'H',
         };
       }),
