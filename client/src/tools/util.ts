@@ -65,7 +65,7 @@ export function strToMachine(str?: string | null): Machine | null {
     isHM: typeLetter === 'H',
   };
 
-  const gymTMs: GymTechnicalMachine[] | undefined = gymTechnicalMachines[store.version!];
+  const gymTMs: GymTechnicalMachine[] | undefined = gymTechnicalMachines[store.gameVersion!];
 
   if (gymTMs) {
     const gymLeader = gymTMs.find(

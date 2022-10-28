@@ -1,6 +1,12 @@
 version: '3.9'
 
 services:
+  server:
+    restart: unless-stopped
+    image: docker.matchbooklab.com/randodex/server:${DOCKER_TAG-latest}
+    networks:
+      - default
+
   website:
     restart: unless-stopped
     image: docker.matchbooklab.com/randodex/website:${DOCKER_TAG-latest}

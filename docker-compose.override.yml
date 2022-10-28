@@ -1,6 +1,10 @@
 version: '3.9'
 
 services:
+  server:
+    ports:
+      - '4567:4567'
+
   website:
     ports:
       - '8888:80'

@@ -10,7 +10,7 @@ export interface UserOptions {
 export interface Store {
   pokemon: Pokemon[];
   moves: Move[];
-  version: GameVersion | null;
+  gameVersion: GameVersion | null;
   machines: Machine[];
   logFormat: LogFormat;
   userOptions: UserOptions;
@@ -24,7 +24,7 @@ const defaultUserOptions: UserOptions = {
 export const store = reactive<Store>({
   pokemon: [],
   moves: [],
-  version: null,
+  gameVersion: null,
   machines: [],
   logFormat: LogFormat.Log,
   userOptions: LocalStorage.load(StorageKey.UserOptions) || defaultUserOptions,

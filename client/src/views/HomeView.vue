@@ -35,6 +35,7 @@
 <script setup lang="ts">
 import FileDropZone from '@/components/FileDropZone.vue';
 import PokeDex from '@/components/PokeDex.vue';
+import { API } from '@/tools/api';
 import { parseGameVersion, parseMachines, parseMoves, parsePokemon } from '@/tools/parser';
 import { store } from '@/tools/store';
 import { getFileContents, getLogFormat } from '@/tools/util';
@@ -48,7 +49,7 @@ async function handleFile(file?: File) {
     const logContents = await getFileContents(file);
 
     store.logFormat = getLogFormat(file?.name);
-    store.version = parseGameVersion(logContents);
+    store.gameVersion = parseGameVersion(logContents);
 
     const parsed = parsePokemon(logContents);
 
@@ -56,11 +57,17 @@ async function handleFile(file?: File) {
     store.machines = parseMachines(logContents);
     store.moves = parseMoves(logContents);
 
-    console.log('Detected Version:', store.version);
+    console.log('Detected Version:', store.gameVersion);
 
     if (parsed.length === 0) {
       error.value =
         'This tool currently only works if you at least shuffle/randomize base stats. If you think this is a mistake, please share your log with AwesomeVolkner on the IronMON Discord';
+    }
+
+    try {
+      console.log(await API.post('/api/ping', { gameVersion: store.gameVersion }));
+    } catch {
+      // do nothing
     }
   } catch (err) {
     console.error('Error parsing file', err);
