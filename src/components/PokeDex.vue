@@ -4,7 +4,6 @@
 
     <div class="pokedex">
       <PokemonCard
-        :meta="meta"
         class="pokecard"
         v-for="mon in filteredPokemon"
         :key="mon.number"
@@ -17,7 +16,7 @@
       <div class="empty pokecard"><!-- intentionally left here --></div>
       <div class="empty pokecard"><!-- intentionally left here --></div>
 
-      <PokemonModal v-if="pokemonModal" :pokemon="pokemonModal" :meta="meta" :version="version" />
+      <PokemonModal v-if="pokemonModal" :pokemon="pokemonModal" />
     </div>
 
     <div class="reset" @click="reset()">Upload a New Log</div>
@@ -28,8 +27,9 @@
 import PokemonCard from '@/components/PokemonCard.vue';
 import PokemonModal from '@/components/PokemonModal.vue';
 import PokemonSearch from '@/components/PokemonSearch.vue';
-import type { GameVersion, Meta, Pokemon } from '@/tools/pokemon';
+import type { Pokemon } from '@/tools/pokemon';
 import { closePokemonModal, getPokemonForModal, openPokemonModal } from '@/tools/select';
+import { store } from '@/tools/store';
 import { flatMap, max, min } from 'lodash';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -37,13 +37,10 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const pokemonModal = computed(() => getPokemonForModal());
 
-const props = defineProps<{
-  pokemon: Pokemon[];
-  version: GameVersion | null;
-}>();
+const pokemon = computed<Pokemon[]>(() => store.pokemon);
 
 const filteredPokemon = computed(() =>
-  props.pokemon.filter(
+  pokemon.value.filter(
     (mon) => !searchStr.value || mon.name.toLowerCase().includes(searchStr.value?.toLowerCase()),
   ),
 );
@@ -57,30 +54,30 @@ function reset() {
 watch(
   () => route.hash?.replace('#', '') || '',
   (hash) => {
-    const pokemon = props.pokemon.find((mon) => mon.name === hash);
-    if (pokemon) {
-      openPokemonModal(pokemon, false);
+    const mon = pokemon.value.find((pkmn) => pkmn.name === hash);
+    if (mon) {
+      openPokemonModal(mon, false);
     } else {
       closePokemonModal();
     }
   },
 );
 
-const meta = computed<Meta>(() => ({
-  // minHp: minBy(props.pokemon, (mon) => mon.hp)!.hp,
-  // maxHp: maxBy(props.pokemon, (mon) => mon.hp)!.hp,
-  // minAttack: minBy(props.pokemon, (mon) => mon.attack)!.attack,
-  // maxAttack: maxBy(props.pokemon, (mon) => mon.attack)!.attack,
-  // minDefense: minBy(props.pokemon, (mon) => mon.defense)!.defense,
-  // maxDefense: maxBy(props.pokemon, (mon) => mon.defense)!.defense,
-  // minSpecialAttack: minBy(props.pokemon, (mon) => mon.specialAttack)!.specialAttack,
-  // maxSpecialAttack: maxBy(props.pokemon, (mon) => mon.specialAttack)!.specialAttack,
-  // minSpecialDefense: minBy(props.pokemon, (mon) => mon.specialDefense)!.specialDefense,
-  // maxSpecialDefense: maxBy(props.pokemon, (mon) => mon.specialDefense)!.specialDefense,
-  // minSpeed: minBy(props.pokemon, (mon) => mon.speed)!.speed,
-  // maxSpeed: maxBy(props.pokemon, (mon) => mon.speed)!.speed,
+store.extra = {
+  // minHp: minBy(pokemon.value, (mon) => mon.hp)!.hp,
+  // maxHp: maxBy(pokemon.value, (mon) => mon.hp)!.hp,
+  // minAttack: minBy(pokemon.value, (mon) => mon.attack)!.attack,
+  // maxAttack: maxBy(pokemon.value, (mon) => mon.attack)!.attack,
+  // minDefense: minBy(pokemon.value, (mon) => mon.defense)!.defense,
+  // maxDefense: maxBy(pokemon.value, (mon) => mon.defense)!.defense,
+  // minSpecialAttack: minBy(pokemon.value, (mon) => mon.specialAttack)!.specialAttack,
+  // maxSpecialAttack: maxBy(pokemon.value, (mon) => mon.specialAttack)!.specialAttack,
+  // minSpecialDefense: minBy(pokemon.value, (mon) => mon.specialDefense)!.specialDefense,
+  // maxSpecialDefense: maxBy(pokemon.value, (mon) => mon.specialDefense)!.specialDefense,
+  // minSpeed: minBy(pokemon.value, (mon) => mon.speed)!.speed,
+  // maxSpeed: maxBy(pokemon.value, (mon) => mon.speed)!.speed,
   min: min(
-    flatMap(props.pokemon, (mon) => [
+    flatMap(pokemon.value, (mon) => [
       mon.hp,
       mon.attack,
       mon.defense,
@@ -90,7 +87,7 @@ const meta = computed<Meta>(() => ({
     ]),
   )!,
   max: max(
-    flatMap(props.pokemon, (mon) => [
+    flatMap(pokemon.value, (mon) => [
       mon.hp,
       mon.attack,
       mon.defense,
@@ -99,7 +96,7 @@ const meta = computed<Meta>(() => ({
       mon.speed,
     ]),
   )!,
-}));
+};
 </script>
 
 <style lang="scss" scoped>

@@ -8,28 +8,27 @@
     :class="{ dragging: isDragging }"
   >
     <div class="msg">
-      Drop your
-      <span class="code">seedname.gba.log</span>
-      file here
+      <slot />
     </div>
 
     <div class="error" v-if="error">
       {{ error }}
     </div>
+    <div class="error" v-if="slots.error">
+      <slot name="error" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { parsePokemonJson } from '@/tools/parser-json';
-import { parseGameVersion, parsePokemon } from '@/tools/parser-log';
-import type { ParsedResults } from '@/tools/pokemon';
-import { getFileContents } from '@/tools/util';
-import { ref } from 'vue';
+import { ref, useSlots } from 'vue';
 
 const isDragging = ref(false);
 
+const slots = useSlots();
+
 const emit = defineEmits<{
-  (event: 'fileDropped', results: ParsedResults): void;
+  (event: 'fileDropped', file: File | undefined): void;
 }>();
 
 const error = ref('');
@@ -48,24 +47,7 @@ async function handleDrop(event: DragEvent) {
     file = event.dataTransfer?.files[0]!;
   }
 
-  try {
-    const logContents = await getFileContents(file);
-
-    const parsed = file?.name.endsWith('json')
-      ? parsePokemonJson(logContents)
-      : parsePokemon(logContents);
-
-    emit('fileDropped', { pokemon: parsed, version: parseGameVersion(logContents) });
-
-    if (parsed.length === 0) {
-      error.value =
-        'This tool currently only works if you at least shuffle/randomize base stats. If you think this is a mistake, please share your log with AwesomeVolkner on the IronMON Discord';
-    }
-  } catch (err) {
-    console.error('Error parsing file', err);
-    error.value =
-      'There was an error parsing your log. Try reaching out to AwesomeVolkner on the IronMON Discord.';
-  }
+  emit('fileDropped', file);
 }
 </script>
 
@@ -84,14 +66,6 @@ async function handleDrop(event: DragEvent) {
   &.dragging {
     background: lightgray;
   }
-}
-
-.code {
-  background: rgba(#ffba48, 0.4);
-  padding: 0 0.7rem;
-  border: rgba(#ffba48, 0.8) 4px solid;
-  border-radius: 4px;
-  pointer-events: none;
 }
 
 .error {

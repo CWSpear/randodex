@@ -63,9 +63,13 @@
               <th title="Speed" class="speed header">SPD</th>
               <td class="speed cell">{{ pokemon.speed }}</td>
             </tr>
+            <!--<tr class="row">-->
+            <!--  <th title="Base Stat Total" class="bst header">BST</th>-->
+            <!--  <td class="bst cell">{{ sumOfStats }}</td>-->
+            <!--</tr>-->
           </table>
 
-          <StatsChart :meta="meta" :pokemon="pokemon" />
+          <StatsChart :pokemon="pokemon" />
         </div>
 
         <div class="evolutions" v-if="pokemon.evolutions.length">
@@ -89,36 +93,71 @@
           </div>
         </div>
 
-        <div class="moves">
-          <table class="moves-table table" v-if="showMoves">
-            <tr :key="move.level + move.name" v-for="move in pokemon.moves">
-              <th class="move-level">Level {{ move.level }}</th>
-              <td class="move-name">{{ move.name }}</td>
-            </tr>
-          </table>
+        <div class="moves-and-machines">
+          <div class="moves-table-wrapper" v-if="pokemon.moves && pokemon.moves.length > 0">
+            <div class="toggle-wrapper" v-if="gymTMs.length > 0">
+              <!-- for spacing purposes -->
+              &nbsp;
+            </div>
+            <table class="moves-table table">
+              <tr :key="move.level + move.name" v-for="move in pokemon.moves">
+                <th class="move-level">Level {{ move.level }}</th>
+                <td class="move-name">{{ move.name }}</td>
+              </tr>
+            </table>
+          </div>
 
-          <!--<label v-if="gymTmInfo.length > 0">-->
-          <!--  <input type="checkbox" v-model="gymTmFilter" />-->
-          <!--  Show Gym TMs-->
-          <!--</label>-->
-          <table class="machines-table table" v-if="showMachines">
-            <tr
-              :key="machine.number + '' + (machine.isHM + '')"
-              v-for="machine in pokemon.machines"
+          <div
+            class="machines-table-wrapper"
+            v-if="pokemon.machines && pokemon.machines.length > 0"
+          >
+            <div class="toggle-wrapper" v-if="gymTMs.length > 0">
+              <Toggle class="no-outline" v-model="store.userOptions.filterGymTms" />
+              Filter Gym TMs
+            </div>
+
+            <table
+              class="machines-table table"
+              v-if="gymTMs.length > 0 && store.userOptions.filterGymTms"
             >
-              <th class="machine-number">
-                <div class="flex">
-                  <span class="leader-badge" v-if="!machine.isHM && gymTmInfo[machine.number]">
-                    {{ gymTmInfo[machine.number].leader }}
-                  </span>
-                  <strong>{{ machine.isHM ? 'H' : 'T' }}M{{ autoPad(machine.number) }}</strong>
-                </div>
-              </th>
-              <td class="machine-name">
-                {{ machine.move }}
-              </td>
-            </tr>
-          </table>
+              <tr
+                :key="machine.number + '' + (machine.isHM + '')"
+                v-for="machine in gymTMs"
+                :class="{ unlearnable: !knowsGymTm(machine) }"
+              >
+                <th class="machine-number-and-leader-name">
+                  <div class="flex">
+                    <span class="leader-name" v-if="machine.gymLeader">
+                      {{ machine.gymLeader }}
+                    </span>
+                    <strong class="machine-number">{{ machineToStr(machine) }}</strong>
+                  </div>
+                </th>
+                <td class="machine-name">
+                  {{ machine.move }}
+                </td>
+              </tr>
+            </table>
+
+            <table class="machines-table table" v-else>
+              <tr
+                :key="machine.number + '' + (machine.isHM + '')"
+                v-for="machine in pokemon.machines"
+              >
+                <th class="machine-number">
+                  <div class="flex">
+                    <span class="leader-name" v-if="machine.gymLeader">
+                      {{ machine.gymLeader }}
+                    </span>
+                    <strong>{{ machineToStr(machine) }}</strong>
+                  </div>
+                </th>
+                <td class="machine-name">
+                  {{ machine.move }}
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -126,40 +165,40 @@
 </template>
 
 <script lang="ts" setup>
+import { store } from '@/tools/store';
+import Toggle from '@vueform/toggle';
 import PokemonSprite from '@/components/PokemonSprite.vue';
 import PokemonType from '@/components/PokemonType.vue';
 import PokemonTypeBackground from '@/components/PokemonTypeBackground.vue';
 import StatsChart from '@/components/StatsChart.vue';
-import type { GameVersion, Meta, Pokemon } from '@/tools/pokemon';
+import type { Machine, Pokemon } from '@/tools/pokemon';
 import { closePokemonModal } from '@/tools/select';
-import type { GymTechnicalMachine } from '@/tools/static';
-import { gymTechnicalMachines } from '@/tools/static';
-import type { Dictionary } from 'lodash';
-import { keyBy, max, padStart } from 'lodash';
+import { machineToStr } from '@/tools/util';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
   pokemon: Pokemon;
-  meta: Meta;
-  version: GameVersion | null;
 }>();
 
-const showMoves = ref(true);
-
-const showMachines = ref(true);
-
-const gymTmFilter = ref(false);
-
-const gymTmInfo = computed<Dictionary<GymTechnicalMachine>>(() =>
-  keyBy((props.version ? gymTechnicalMachines[props.version] : []) || [], (tm) => tm.number),
+// sumOfStats !== BST
+const sumOfStats = computed<number>(
+  () =>
+    props.pokemon.hp +
+    props.pokemon.attack +
+    props.pokemon.defense +
+    props.pokemon.specialAttack +
+    props.pokemon.specialDefense +
+    props.pokemon.speed,
 );
 
-const maxDigitLength = computed(
-  () => (max(props.pokemon.machines.map((m) => m.number)) + '').length,
-);
+console.log(props.pokemon);
 
-function autoPad(num: number): string {
-  return padStart(num + '', maxDigitLength.value, '0');
+const gymTMs = computed(() => {
+  return store.machines.filter((machine) => !!machine.gymLeader);
+});
+
+function knowsGymTm(machine: Machine) {
+  return !!props.pokemon.machines.find((m) => !m.isHM && m.number === machine.number);
 }
 
 function closeModal(event?: MouseEvent) {
@@ -275,7 +314,7 @@ h1 {
   }
 }
 
-.moves {
+.moves-and-machines {
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -327,7 +366,7 @@ h1 {
   vertical-align: middle;
 }
 
-.leader-badge {
+.leader-name {
   font-weight: 400;
   font-size: 0.7rem;
   margin-right: 0.25rem;
@@ -338,4 +377,23 @@ h1 {
   justify-content: flex-end;
   align-items: center;
 }
+
+.toggle-wrapper {
+  height: 40px;
+}
+
+.unlearnable {
+  $opacity: 0.7;
+
+  .machine-number {
+    opacity: $opacity;
+    text-decoration: line-through;
+  }
+  .machine-number-and-leader-name,
+  .machine-name {
+    opacity: $opacity;
+  }
+}
 </style>
+
+<style src="@vueform/toggle/themes/default.css"></style>

@@ -1,7 +1,15 @@
+import {
+  parseGameVersionJson,
+  parseMachinesJson,
+  parseMovesJson,
+  parsePokemonJson,
+} from '@/tools/parser-json';
+import { store } from '@/tools/store';
 import type { Dictionary } from 'lodash';
-import { compact, fromPairs, keyBy } from 'lodash';
+import { compact, fromPairs, keyBy, sortBy, uniqBy } from 'lodash';
 import type { BaseStats, GameVersion, Machine, Move, Pokemon, Type } from './pokemon';
-import { cleanUpString } from './util';
+import { LogFormat } from './pokemon';
+import { cleanUpString, machineToStr, strToMachine } from './util';
 
 const MACHINE_TABLE_START = '--TM Compatibility--';
 const POKEMON_TABLE_START = '--Pokemon Base Stats & Types--';
@@ -16,6 +24,10 @@ const NO_MACHINES_LINE = 'TM Moves: Unchanged';
 const NO_STATS_LINE = 'Pokemon base stats & type: unchanged';
 
 export function parseGameVersion(logContents: string): GameVersion | null {
+  if (store.logFormat === LogFormat.JSON) {
+    return parseGameVersionJson(logContents);
+  }
+
   const matches = logContents.match(GAME_NAME_REGEX);
 
   if (!matches) {
@@ -26,9 +38,13 @@ export function parseGameVersion(logContents: string): GameVersion | null {
 }
 
 export function parsePokemon(logContents: string): Pokemon[] {
-  const evolutionsMap: Dictionary<string[]> = parseEvolutions(logContents);
-  const movesMap: Dictionary<Move[]> = parseMoves(logContents);
-  const machineMap: Dictionary<Machine[]> = parseMachines(logContents);
+  if (store.logFormat === LogFormat.JSON) {
+    return parsePokemonJson(logContents);
+  }
+
+  const evolutionsMap: Dictionary<string[]> = parseEvolutionsByPokemon(logContents);
+  const movesMap: Dictionary<Move[]> = parseMovesByPokemon(logContents);
+  const machineMap: Dictionary<Machine[]> = parseMachinesByPokemon(logContents);
 
   const baseStats = parseBaseStats(logContents);
 
@@ -56,7 +72,31 @@ export function parsePokemon(logContents: string): Pokemon[] {
   });
 }
 
-export function parseBaseStats(logContents: string): BaseStats[] {
+export function parseMoves(logContents: string): Move[] {
+  if (store.logFormat === LogFormat.JSON) {
+    return parseMovesJson(logContents);
+  }
+
+  return [];
+}
+
+export function parseMachines(logContents: string): Machine[] {
+  if (store.logFormat === LogFormat.JSON) {
+    return parseMachinesJson(logContents);
+  }
+
+  const parsedMachines = Object.values(parseMachinesByPokemon(logContents)).flat();
+
+  const uniqParsedMachines = uniqBy(compact(parsedMachines), (machine) => machineToStr(machine));
+
+  return sortBy(uniqParsedMachines, (machine) => machine.number + (machine.isHM ? 1000 : 0));
+}
+
+function parseBaseStats(logContents: string): BaseStats[] {
+  if (store.logFormat === LogFormat.JSON) {
+    throw new Error('`parseBaseStats` is not needed/unnecessary for JSON logs');
+  }
+
   if (logContents.includes(NO_STATS_LINE)) {
     return [];
   }
@@ -106,7 +146,11 @@ export function parseBaseStats(logContents: string): BaseStats[] {
   return allPokemon;
 }
 
-export function parseEvolutions(logContents: string): Dictionary<string[]> {
+function parseEvolutionsByPokemon(logContents: string): Dictionary<string[]> {
+  if (store.logFormat === LogFormat.JSON) {
+    throw new Error('`parseEvolutionsByPokemon` is not needed/unnecessary for JSON logs');
+  }
+
   const [, keep] = logContents.split(POKEMON_EVOLUTION_START);
 
   if (!keep) {
@@ -140,7 +184,11 @@ export function parseEvolutions(logContents: string): Dictionary<string[]> {
   );
 }
 
-export function parseMoves(logContents: string): Dictionary<Move[]> {
+function parseMovesByPokemon(logContents: string): Dictionary<Move[]> {
+  if (store.logFormat === LogFormat.JSON) {
+    throw new Error('`parseMovesByPokemon` is not needed/unnecessary for JSON logs');
+  }
+
   if (logContents.includes(NO_MOVES_LINE)) {
     return {};
   }
@@ -182,7 +230,11 @@ export function parseMoves(logContents: string): Dictionary<Move[]> {
   return movesMap;
 }
 
-export function parseMachines(logContents: string): Dictionary<Machine[]> {
+function parseMachinesByPokemon(logContents: string): Dictionary<Machine[]> {
+  if (store.logFormat === LogFormat.JSON) {
+    throw new Error('`parseMachinesByPokemon` is not needed/unnecessary for JSON logs');
+  }
+
   if (logContents.includes(NO_MACHINES_LINE)) {
     return {};
   }
@@ -202,24 +254,12 @@ export function parseMachines(logContents: string): Dictionary<Machine[]> {
     const [pokemonRaw, ...machinesRaw] = line.split('|');
     const pokemon = pokemonRaw.replace(/\d{1,3} /, '').trim();
     machineMap[pokemon] = compact(
-      machinesRaw.map((machineRaw) => {
-        if (!machineRaw.trim() || machineRaw.trim() === '-') {
+      machinesRaw.map((machineStr) => {
+        if (!machineStr.trim() || machineStr.trim() === '-') {
           return null;
         }
 
-        const matches = machineRaw.match(/(T|H)M(\d+) (.*)/)!;
-        if (!matches) {
-          console.error(`Error looking for machines for ${pokemon}:`);
-          return null;
-        }
-
-        const [, typeLetter, num, name] = matches;
-
-        return {
-          number: +num,
-          move: cleanUpString(name.trim()),
-          isHM: typeLetter === 'H',
-        };
+        return strToMachine(machineStr.trim());
       }),
     );
   });

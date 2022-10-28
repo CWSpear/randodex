@@ -12,6 +12,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@vueform/toggle": "^2.1.2",
     "chart.js": "^3.9.1",
     "lodash": "^4.17.21",
     "vue": "^3.2.41",

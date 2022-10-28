@@ -9,13 +9,11 @@
 <script setup lang="ts">
 import PokemonSprite from '@/components/PokemonSprite.vue';
 import type { Pokemon } from '@/tools/pokemon';
-import type { Meta } from '@/tools/pokemon';
 import { getPokeHash, openPokemonModal } from '@/tools/select';
 import { computed } from 'vue';
 
 const props = defineProps<{
   pokemon: Pokemon;
-  meta: Meta;
 }>();
 
 const highlight = computed(() => getPokeHash() === props.pokemon.name);

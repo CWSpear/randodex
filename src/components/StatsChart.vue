@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Meta, Pokemon } from '@/tools/pokemon';
+import type { Pokemon } from '@/tools/pokemon';
 import {
   Chart as ChartJS,
   Filler,
@@ -21,7 +21,6 @@ ChartJS.register(Title, PointElement, RadialLinearScale, LineElement, Filler);
 
 const props = defineProps<{
   pokemon: Pokemon;
-  meta: Meta;
 }>();
 
 // vite is freaking out at this, but nothing else seems to mind
@@ -59,7 +58,7 @@ const chartOptions = computed(() => ({
   scales: {
     r: {
       suggestedMin: 0,
-      // suggestedMax: props.meta.max,
+      // suggestedMax: store.extra.max,
       pointLabels: {
         font: {
           size: 14,
