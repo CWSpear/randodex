@@ -2,14 +2,14 @@
   "name": "randodex",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "run-p type-check build-only",
-    "preview": "vite preview",
-    "test:unit": "vitest --environment jsdom --root src/",
-    "test:e2e": "playwright test",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "dev:client": "cd client && vite",
+    "build:client": "cd client && npm run type-check:client && npm run build-only:client",
+    "preview:client": "cd client && vite preview",
+    "test:unit:client": "cd client && vitest --environment jsdom --root ./src/",
+    "test:e2e:client": "cd client && playwright test",
+    "build-only:client": "cd client && vite build",
+    "type-check:client": "cd client && vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "lint:client": "cd client && eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "@vueform/toggle": "^2.1.2",
