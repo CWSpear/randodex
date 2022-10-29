@@ -6,5 +6,5 @@ Basics for getting started in developing:
 
 ```
 npm install
-npm run dev
+npm run dev:client
 ```
