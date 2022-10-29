@@ -4,7 +4,7 @@ WORKDIR /build/
 
 COPY ./package.json ./package-lock.json ./
 
-RUN --mount=type=cache,target=/root/.npm,id=matchbook-lab_npm-cache npm install
+RUN --mount=type=cache,target=/root/.npm,id=matchbook-lab_npm-cache npm ci
 
 COPY ./ ./
 
