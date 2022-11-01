@@ -27,26 +27,26 @@ const props = defineProps<{
 const src = computed(() => {
   return `/sprites/${props.pokemon.number}.png`;
 
-  const spriteNameRaw = props.pokemon.name.toLowerCase().replace(/ /g, '-');
-
-  // some special cases...
-  let spriteName: string;
-  switch (spriteNameRaw) {
-    case 'nidoran♀':
-      spriteName = 'nidoran-f';
-      break;
-    case 'nidoran♂':
-      spriteName = 'nidoran-m';
-      break;
-    case 'porygon-2':
-      spriteName = 'porygon2';
-      break;
-    default:
-      spriteName = spriteNameRaw;
-      break;
-  }
-
-  return `/sprites/${spriteName}.png`;
+  // const spriteNameRaw = props.pokemon.name.toLowerCase().replace(/ /g, '-');
+  //
+  // // some special cases...
+  // let spriteName: string;
+  // switch (spriteNameRaw) {
+  //   case 'nidoran♀':
+  //     spriteName = 'nidoran-f';
+  //     break;
+  //   case 'nidoran♂':
+  //     spriteName = 'nidoran-m';
+  //     break;
+  //   case 'porygon-2':
+  //     spriteName = 'porygon2';
+  //     break;
+  //   default:
+  //     spriteName = spriteNameRaw;
+  //     break;
+  // }
+  //
+  // return `/sprites/${spriteName}.png`;
 });
 </script>
 

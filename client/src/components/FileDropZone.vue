@@ -44,7 +44,7 @@ async function handleDrop(event: DragEvent) {
       file = item.getAsFile()!;
     }
   } else {
-    file = event.dataTransfer?.files[0]!;
+    file = event.dataTransfer?.files[0];
   }
 
   emit('fileDropped', file);

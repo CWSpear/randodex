@@ -165,15 +165,15 @@
 </template>
 
 <script lang="ts" setup>
-import { store } from '@/tools/store';
-import Toggle from '@vueform/toggle';
 import PokemonSprite from '@/components/PokemonSprite.vue';
 import PokemonType from '@/components/PokemonType.vue';
 import PokemonTypeBackground from '@/components/PokemonTypeBackground.vue';
 import StatsChart from '@/components/StatsChart.vue';
 import type { Machine, Pokemon } from '@/tools/pokemon';
+import { store } from '@/tools/store';
 import { machineToStr } from '@/tools/util';
-import { computed, ref } from 'vue';
+import Toggle from '@vueform/toggle';
+import { computed, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps<{
   pokemon: Pokemon;
@@ -209,6 +209,20 @@ function closeModal(event?: MouseEvent) {
 
   store.selectedPokemonName = null;
 }
+
+function keyListener(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    closeModal();
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', keyListener);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', keyListener);
+});
 </script>
 
 <style lang="scss" scoped>

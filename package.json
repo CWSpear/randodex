@@ -10,7 +10,7 @@
     "test:e2e:client": "cd client && playwright test",
     "build-only:client": "cd client && vite build",
     "type-check:client": "cd client && vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint:client": "cd client && eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint:client": "cd client && eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path ../.gitignore",
     "prebuild:server": "cd server && rimraf dist",
     "build:server": "cd server && nest build",
     "format:server": "cd server && prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
