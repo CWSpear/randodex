@@ -9,7 +9,7 @@ import type { Dictionary } from 'lodash';
 import { compact, fromPairs, keyBy, sortBy, uniqBy } from 'lodash';
 import type { BaseStats, GameVersion, Machine, Move, Pokemon, Type } from './pokemon';
 import { LogFormat } from './pokemon';
-import { cleanUpString, machineToStr, strToMachine } from './util';
+import { cleanUpString, machineToStr, normalizePokemonName, strToMachine } from './util';
 
 const MACHINE_TABLE_START = '--TM Compatibility--';
 const POKEMON_TABLE_START = '--Pokemon Base Stats & Types--';
@@ -48,16 +48,16 @@ export function parsePokemon(logContents: string): Pokemon[] {
 
   const baseStats = parseBaseStats(logContents);
 
-  const baseStatsMap = keyBy(baseStats, (stat) => stat.name.toLowerCase());
+  const baseStatsMap = keyBy(baseStats, (stat) => normalizePokemonName(stat.name));
 
   return baseStats.map((pokemon) => {
-    const evolutions = evolutionsMap[pokemon.name.toUpperCase()] || [];
-    const moves = movesMap[pokemon.name.toUpperCase()];
-    const machines = machineMap[pokemon.name.toUpperCase()];
+    const evolutions = evolutionsMap[pokemon.name] || [];
+    const moves = movesMap[pokemon.name];
+    const machines = machineMap[pokemon.name];
     return {
       ...pokemon,
       evolutions: evolutions.map((evolution) => {
-        const basicInfo = baseStatsMap[evolution.trim().toLowerCase()];
+        const basicInfo = baseStatsMap[normalizePokemonName(evolution)];
 
         return {
           number: basicInfo.number,
@@ -120,7 +120,7 @@ function parseBaseStats(logContents: string): BaseStats[] {
 
     const pokemon: BaseStats = {
       number: +num,
-      name: cleanUpString(name.trim()),
+      name: normalizePokemonName(name.trim()),
       type1: <Type>cleanUpString(type1),
       ...(type2 ? { type2: <Type | undefined>cleanUpString(type2) } : {}),
       hp: +hp,
@@ -175,7 +175,7 @@ function parseEvolutionsByPokemon(logContents: string): Dictionary<string[]> {
       const evolutions = evolutionsStr.split(/(,| and )/i);
 
       return [
-        base.trim(),
+        normalizePokemonName(base),
         evolutions
           .map((evo) => cleanUpString(evo.trim()))
           .filter((evo) => !!evo && evo !== ',' && evo !== 'And'),
@@ -204,24 +204,23 @@ function parseMovesByPokemon(logContents: string): Dictionary<Move[]> {
   const movesMap: Dictionary<Move[]> = {};
 
   do {
-    const [pokemon, , movesRaw] = lineGroups;
+    const [pokemonRaw, , movesRaw] = lineGroups;
+    const pokemon = normalizePokemonName(pokemonRaw);
 
     if (!movesRaw) {
       break;
     }
 
-    const moves = movesRaw
+    movesMap[pokemon] = movesRaw
       .split(/\r?\n/)
       .filter((line) => MOVE_LINE_REGEX.test(line))
       .map((line) => {
         const [, level, name] = line.match(MOVE_LINE_REGEX)!;
         return {
           level: +level,
-          name: cleanUpString(name.trim()),
+          name: cleanUpString(name),
         };
       });
-
-    movesMap[pokemon] = moves;
 
     lineGroups = lineGroups.slice(3);
     // eslint-disable-next-line no-constant-condition
@@ -252,7 +251,7 @@ function parseMachinesByPokemon(logContents: string): Dictionary<Machine[]> {
   const machineMap: Dictionary<Machine[]> = {};
   lines.forEach((line) => {
     const [pokemonRaw, ...machinesRaw] = line.split('|');
-    const pokemon = pokemonRaw.replace(/\d{1,3} /, '').trim();
+    const pokemon = normalizePokemonName(pokemonRaw.replace(/\d{1,3} /, ''));
     machineMap[pokemon] = compact(
       machinesRaw.map((machineStr) => {
         if (!machineStr.trim() || machineStr.trim() === '-') {

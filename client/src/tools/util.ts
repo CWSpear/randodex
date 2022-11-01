@@ -5,6 +5,22 @@ import { gymTechnicalMachines } from '@/tools/static';
 import { store } from '@/tools/store';
 import { lowerCase, padStart, startCase } from 'lodash';
 
+export function normalizePokemonName(pokemon: string): string {
+  if (!pokemon?.trim()) {
+    return '';
+  }
+
+  // if (pokemon.match(/porygon ?2/i)) {
+  //   return 'Porygon 2';
+  // }
+  //
+  // if (pokemon.match(/mr\.? ?mime/i)) {
+  //   return 'Mr. Mime';
+  // }
+
+  return cleanUpString(pokemon.trim());
+}
+
 export function cleanUpString(str: string): string;
 export function cleanUpString(str?: null): undefined;
 export function cleanUpString(str?: string | null): string | undefined;

@@ -36,9 +36,28 @@ const heartGoldAndSoulSilver: GymTechnicalMachine[] = [
   { leader: 'Chuck', number: 1 },
 ];
 
+const sapphireAndRuby: GymTechnicalMachine[] = [
+  { leader: 'Roxanne ', number: 39 },
+  { leader: 'Brawly', number: 8 },
+  { leader: 'Wattson ', number: 34 },
+  { leader: 'Flannery ', number: 50 },
+  { leader: 'Norman ', number: 42 },
+  { leader: 'Winona ', number: 40 },
+  { leader: 'Take & Liza', number: 4 },
+  { leader: 'Wallace', number: 3 },
+];
+
+const emerald: GymTechnicalMachine[] = [
+  ...sapphireAndRuby.filter((gymTm) => gymTm.leader !== 'Wallace'),
+  { leader: 'Juan', number: 3 },
+];
+
 export const gymTechnicalMachines: Record<GameVersion, GymTechnicalMachine[]> = {
   [GameVersion.FireRed]: fireRedAndLeafGreen,
   [GameVersion.LeafGreen]: fireRedAndLeafGreen,
   [GameVersion.HeartGold]: heartGoldAndSoulSilver,
   [GameVersion.SoulSilver]: heartGoldAndSoulSilver,
+  [GameVersion.Ruby]: sapphireAndRuby,
+  [GameVersion.Sapphire]: sapphireAndRuby,
+  [GameVersion.Emerald]: emerald,
 };

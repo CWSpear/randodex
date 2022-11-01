@@ -8,6 +8,9 @@ export enum GameVersion {
   LeafGreen = 'Leaf Green',
   HeartGold = 'HeartGold',
   SoulSilver = 'SoulSilver',
+  Ruby = 'Ruby',
+  Sapphire = 'Sapphire',
+  Emerald = 'Emerald',
 }
 
 export enum Type {
