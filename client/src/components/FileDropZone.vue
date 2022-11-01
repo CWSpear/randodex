@@ -28,7 +28,7 @@ const isDragging = ref(false);
 const slots = useSlots();
 
 const emit = defineEmits<{
-  (event: 'fileDropped', file: File | undefined): void;
+  (event: 'fileDropped', file: File): void;
 }>();
 
 const error = ref('');
@@ -37,14 +37,19 @@ async function handleDrop(event: DragEvent) {
   isDragging.value = false;
   error.value = '';
 
-  let file: File | undefined;
+  let file: File | undefined | null;
   if (event.dataTransfer?.items) {
     const item = event.dataTransfer.items[0];
     if (item.kind === 'file') {
-      file = item.getAsFile()!;
+      file = item.getAsFile();
     }
   } else {
     file = event.dataTransfer?.files[0];
+  }
+
+  if (!file) {
+    error.value = 'No file detected';
+    return;
   }
 
   emit('fileDropped', file);

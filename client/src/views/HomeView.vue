@@ -42,11 +42,11 @@ import { computed, ref } from 'vue';
 const logIsLoaded = computed<boolean>(() => store.pokemon.length > 0);
 const error = ref('');
 
-async function handleFile(file?: File) {
+async function handleFile(file: File) {
   try {
     const logContents = await getFileContents(file);
 
-    store.logFormat = getLogFormat(file?.name);
+    store.logFormat = getLogFormat(file.name);
     store.gameVersion = parseGameVersion(logContents);
 
     const parsed = parsePokemon(logContents);

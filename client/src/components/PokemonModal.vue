@@ -211,7 +211,9 @@ function closeModal(event?: MouseEvent) {
 }
 
 function keyListener(event: KeyboardEvent) {
-  if (event.key === 'Escape') {
+  const key = event.key || event.keyCode;
+
+  if (key === 'Escape' || key === 'Esc' || key === 27) {
     closeModal();
   }
 }
