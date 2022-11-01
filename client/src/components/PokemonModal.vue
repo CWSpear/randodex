@@ -172,7 +172,6 @@ import PokemonType from '@/components/PokemonType.vue';
 import PokemonTypeBackground from '@/components/PokemonTypeBackground.vue';
 import StatsChart from '@/components/StatsChart.vue';
 import type { Machine, Pokemon } from '@/tools/pokemon';
-import { closePokemonModal } from '@/tools/select';
 import { machineToStr } from '@/tools/util';
 import { computed, ref } from 'vue';
 
@@ -191,8 +190,6 @@ const sumOfStats = computed<number>(
     props.pokemon.speed,
 );
 
-console.log(props.pokemon);
-
 const gymTMs = computed(() => {
   return store.machines.filter((machine) => !!machine.gymLeader);
 });
@@ -210,7 +207,7 @@ function closeModal(event?: MouseEvent) {
     }
   }
 
-  closePokemonModal();
+  store.selectedPokemonName = null;
 }
 </script>
 

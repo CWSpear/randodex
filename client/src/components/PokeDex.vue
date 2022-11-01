@@ -28,14 +28,13 @@ import PokemonCard from '@/components/PokemonCard.vue';
 import PokemonModal from '@/components/PokemonModal.vue';
 import PokemonSearch from '@/components/PokemonSearch.vue';
 import type { Pokemon } from '@/tools/pokemon';
-import { closePokemonModal, getPokemonForModal, openPokemonModal } from '@/tools/select';
 import { store } from '@/tools/store';
 import { flatMap, max, min } from 'lodash';
-import { computed, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, ref } from 'vue';
 
-const route = useRoute();
-const pokemonModal = computed(() => getPokemonForModal());
+const pokemonModal = computed(() =>
+  store.pokemon.find((mon) => mon.name === store.selectedPokemonName),
+);
 
 const pokemon = computed<Pokemon[]>(() => store.pokemon);
 
@@ -51,17 +50,18 @@ function reset() {
   window.location.reload();
 }
 
-watch(
-  () => route.hash?.replace('#', '') || '',
-  (hash) => {
-    const mon = pokemon.value.find((pkmn) => pkmn.name === hash);
-    if (mon) {
-      openPokemonModal(mon, false);
-    } else {
-      closePokemonModal();
-    }
-  },
-);
+// watch(
+//   () => store.selectedPokemon,
+//   (selected) => {
+//     const mon = pokemon.value.find((pkmn) => pkmn.name === selected);
+//     if (mon) {
+//       openPokemonModal(mon, false);
+//     } else {
+//       closePokemonModal();
+//     }
+//   },
+//   { immediate: true },
+// );
 
 store.extra = {
   // minHp: minBy(pokemon.value, (mon) => mon.hp)!.hp,

@@ -1,6 +1,6 @@
 <template>
   <div class="pokemon-card-wrapper">
-    <div @click="openModal()" class="pokemon-card" :id="pokemon.name" :class="{ highlight }">
+    <div @click="selectPokemon()" class="pokemon-card" :id="pokemon.name" :class="{ highlight }">
       <PokemonSprite class="pokemon-card-sprite" :pokemon="pokemon" :withName="true" />
     </div>
   </div>
@@ -9,17 +9,17 @@
 <script setup lang="ts">
 import PokemonSprite from '@/components/PokemonSprite.vue';
 import type { Pokemon } from '@/tools/pokemon';
-import { getPokeHash, openPokemonModal } from '@/tools/select';
+import { store } from '@/tools/store';
 import { computed } from 'vue';
 
 const props = defineProps<{
   pokemon: Pokemon;
 }>();
 
-const highlight = computed(() => getPokeHash() === props.pokemon.name);
+const highlight = computed(() => store.selectedPokemonName === props.pokemon.name);
 
-function openModal() {
-  openPokemonModal(props.pokemon);
+function selectPokemon() {
+  store.selectedPokemonName = props.pokemon.name;
 }
 </script>
 

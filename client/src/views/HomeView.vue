@@ -20,9 +20,7 @@
         </template>
       </FileDropZone>
 
-      <div class="caveat">
-        Beta v2 — Tested with FireRed logs. Reported to work with Gen 4 logs.
-      </div>
+      <div class="caveat">Pre-release v1 — Works with Gen 4 remake and all Gen 3 logs.</div>
 
       <div class="footer">
         Made by @AwesomeVolkner on the IronMON Discord.
