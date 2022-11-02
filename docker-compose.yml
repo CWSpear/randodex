@@ -6,11 +6,15 @@ services:
     build:
       context: ./
       dockerfile: ./server/Dockerfile
+    environment:
+      TZ: America/Los_Angeles
 
   website:
     init: true
     build:
       context: ./
       dockerfile: ./client/Dockerfile
+    environment:
+      TZ: America/Los_Angeles
     links:
       - server
